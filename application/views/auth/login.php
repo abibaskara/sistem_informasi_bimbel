@@ -233,7 +233,10 @@
                                 <span class="divider-center text-muted mb-4">OR</span>
                             </div>
 
-                            <?= $this->session->flashdata('flash'); ?>
+                            <div class="flash-data-success" data-flashdata="<?= $this->session->flashdata('success'); ?>"></div>
+                            <div class="flash-data-info" data-flashdata="<?= $this->session->flashdata('info'); ?>"></div>
+                            <div class="flash-data-error" data-flashdata="<?= $this->session->flashdata('error'); ?>"></div>
+
                             <!-- Form -->
                             <div class="mb-4">
                                 <label class="form-label" for="signinSrNik">Your nik</label>
@@ -332,39 +335,11 @@
     <!-- JS Front -->
     <script src="<?= base_url() ?>assets/js/theme.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="<?= base_url() ?>assets/alert.js"></script>
     <script>
         (function() {
 
             window.onload = function() {
-                // INITIALIZATION OF BOOTSTRAP VALIDATION
-                // =======================================================
-                // HSBsValidation.init('.js-validate', {
-                //     onSubmit: data => {
-                //         data.event.preventDefault()
-                //         $.ajax({
-                //             url: '<?= base_url('auth/login') ?>',
-                //             method: 'POST',
-                //             dataType: 'JSON',
-                //             data: $('#form-login').serialize(),
-                //             beforeSend: function() {
-                //                 $("#sign-in").prop('disabled', true);
-                //                 $('#test').addClass("fa fa-spinner fa-spin");
-                //             },
-                //             success: function(result) {
-                //                 console.log(result);
-                //                 $("#sign-in").prop('disabled', false);
-                //                 $('#test').addClass("");
-                //             },
-                //             error: function(xhr, ajaxOptions, thrownError) {
-                //                 console.log(xhr); // I believe this returns an object
-                //                 console.log(xhr.statusText); //"Not Found" 
-                //                 console.log(xhr.status); //404
-                //             },
-                //         })
-                //     }
-                // })
-
-
                 // INITIALIZATION OF TOGGLE PASSWORD
                 // =======================================================
                 new HSTogglePassword('.js-toggle-password')
@@ -374,7 +349,6 @@
 
 
     <!-- JS Plugins Init. -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         (function() {
             $('#btn_sign').click(function() {

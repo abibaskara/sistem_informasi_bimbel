@@ -67,18 +67,40 @@ class Auth extends CI_Controller
                     'id'        => $users->id_user,
                     'username'   => $users->username,
                     'nik'       => $users->nik,
-                    'no_telp'   => $users->no_telp,
+                    'phone'   => $users->phone,
                     'id_matpel' => $users->id_matpel ? $users->id_matpel : null,
                     'kelas_id'  => $users->kelas_id ? $users->kelas_id : null,
                     'role'      => $users->role,
-                    'foto'      => $users->foto,
+                    'pict'      => $users->pict,
                 ];
                 $this->session->set_userdata($session);
 
                 if($users->role == 1) {
                     redirect('staff');
+                } elseif($users->role == 2) {
+                    redirect('siswa');
+                } elseif($users->role == 3) {
+                    redirect('guru');
+                } elseif($users->role == 4) {
+                    redirect('kepala_bimba');
+                } elseif($users->role == 5) {
+                    redirect('wali_kelas');
                 }
+            } else {
+                $this->session->set_flashdata('error', 'Password Anda Salah');
+                redirect('auth/loginNew');
             }
+        } else {
+            $this->session->set_flashdata('info', 'User Tidak Ditemukan');
+            redirect('auth/loginNew');
         }
+    }
+
+    public function logout()
+    {
+        $this->session->unset_userdata('role');
+        session_unset();
+        session_destroy();
+        redirect('auth/loginNew');
     }
 }
