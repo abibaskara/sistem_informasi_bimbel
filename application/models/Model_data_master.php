@@ -57,6 +57,4 @@ class Model_data_master extends CI_Model
                 ->get()->result();
 
     }
-
-    // public function tarif
 }

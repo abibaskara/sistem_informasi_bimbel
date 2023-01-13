@@ -429,7 +429,7 @@
     }
     /* table border added while printing invoice*/
     table th,
-    table td
+    .striped td
     {
         border: 1px solid #e8e8e8;
     }

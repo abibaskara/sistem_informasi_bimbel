@@ -19,44 +19,72 @@ class Staff extends CI_Controller
     public function kelas()
     {
         $data['data'] = $this->DataMaster->get('kelas');
+        $data['matpel'] = $this->DataMaster->get('matpel');
         $this->template->load('template/layout', 'staff/kelas/index', $data);
     }
 
     public function add_kelas()
     {
-        $data = [
-            'kode_kelas' => $this->input->post('kode_kelas'),
-            'kelas' => $this->input->post('nama_kelas'),
-        ];
+        $kelas = $this->input->post('nama_kelas');
+        $id_matpel = $this->input->post('id_matpel');
 
         try {
             //code...
+            $this->db->trans_begin();
+            $data = [
+                'kelas' => $kelas,
+            ];
             $this->DataMaster->create('kelas', $data);
+            $id = $this->db->insert_id();
+            for($i = 0; $i < count($id_matpel); $i++)
+            {
+                $detail_kelas = [
+                    'id_kelas'  => $id,
+                    'id_matpel' => $id_matpel[$i]
+                ];
+                $this->DataMaster->create('detail_kelas', $detail_kelas);
+            }
+            $this->db->trans_commit();
             $this->session->set_flashdata('success', 'Data Berhasil Ditambahkan');
             redirect('staff/kelas');
         } catch (\Throwable $th) {
-            //throw $th;
-            $this->session->set_flashdata('error', 'Gagal Simpan Data');
+            // throw $th;
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('error', $th);
             redirect('staff/kelas');
         }
     }
 
     public function edit_kelas($id)
     {
-        $data = [
-            'kode_kelas' => $this->input->post('kode_kelas'),
-            'kelas' => $this->input->post('nama_kelas'),
-        ];
-        $id = [
-            'id_kelas' => $id
-        ];
+        $kelas = $this->input->post('nama_kelas');
+        $id_matpel = $this->input->post('id_matpel');
+        
         try {
             //code...
-            $this->DataMaster->update('kelas', $data, $id);
+            $this->db->trans_begin();
+            $data = [
+                'kelas' => $kelas,
+            ];
+            $where = [
+                'id_kelas' => $id
+            ];
+            $this->DataMaster->update('kelas', $data, $where);
+            $this->DataMaster->delete('detail_kelas', $where);
+            for($i = 0; $i < count($id_matpel); $i++)
+            {
+                $detail_kelas = [
+                    'id_kelas'  => $id,
+                    'id_matpel' => $id_matpel[$i]
+                ];
+                $this->DataMaster->create('detail_kelas', $detail_kelas);
+            }
+            $this->db->trans_commit();
             $this->session->set_flashdata('success', 'Data Berhasil Diedit');
             redirect('staff/kelas');
         } catch (\Throwable $th) {
             //throw $th;
+            $this->db->trans_rollback();
             $this->session->set_flashdata('error', 'Gagal Edit Data');
             redirect('staff/kelas');
         }
@@ -70,11 +98,15 @@ class Staff extends CI_Controller
     
         try {
             //code...
+            $this->db->trans_begin();
             $this->DataMaster->delete('kelas', $id);
+            $this->DataMaster->delete('detail_kelas', $id);
+            $this->db->trans_commit();
             $this->session->set_flashdata('success', 'Data Berhasil Dihapus');
             redirect('staff/kelas');
         } catch (\Throwable $th) {
             //throw $th;
+            $this->db->trans_rollback();
             $this->session->set_flashdata('error', 'Gagal Hapus Data');
             redirect('staff/kelas');
         }   
