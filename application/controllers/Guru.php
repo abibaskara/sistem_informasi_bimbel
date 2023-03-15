@@ -11,7 +11,7 @@ class Guru extends CI_Controller
 
     public function index()
     {
-        $data['kelas'] = $this->DataGuru->get('kelas');
+        $data['kelass'] = $this->DataGuru->get('kelas');
         $this->template->load('template/layout', 'guru/index', $data);
     }
 
